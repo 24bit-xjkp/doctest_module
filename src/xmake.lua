@@ -2,7 +2,7 @@ target("doctest")
     set_kind("$(kind)")
     add_includedirs(".", {public = true})
     add_headerfiles("*.hpp")
-    add_files("doctest.cpp", {public = true, install = true})
+    add_files("doctest.cppm", {public = true, install = true})
     add_files("doctest_impl.cpp")
 target_end()
 

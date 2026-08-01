@@ -6,7 +6,6 @@ add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_allowedmodes("debug", "release", "releasedbg")
 add_requires("clean_std_heads", "doctest")
 add_packages("clean_std_heads", "doctest")
-set_policy("build.c++.modules", true)
 
 option("check_kind")
     set_values(false)
