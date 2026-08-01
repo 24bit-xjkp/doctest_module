@@ -1,0 +1,15 @@
+package("clean_std_heads")
+    set_homepage("https://github.com/YexuanXiao/convert-cpp-std-headers-to-std-module")
+    set_urls("https://github.com/YexuanXiao/convert-cpp-std-headers-to-std-module.git")
+    add_versions("1.0", "73b5212319bc9dab6a0bdc12afed5036b153bb7e")
+    add_versions("1.1", "00ae6cc3184d9e55cae67fc9ff305a235b968e6e")
+    set_kind("library", {headeronly = true})
+
+    on_install(function (package)
+        os.cp("clear_all_cpp_std_headers.h", package:installdir("include"))
+    end)
+
+    on_test(function (package)
+        assert(package:has_cxxincludes("clear_all_cpp_std_headers.h"))
+    end)
+package_end()
