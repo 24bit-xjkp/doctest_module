@@ -24,4 +24,17 @@ option("with_main")
     set_description("Enable main function support.")
 option_end()
 
+option("use_std_harden")
+    set_default(false)
+    set_description("Enable c++ standard library harden.")
+    local defines
+    if is_mode("debug") then
+        defines = {"_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG", "_GLIBCXX_DEBUG"}
+    else
+        defines = {"_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST", "_GLIBCXX_ASSERTIONS"}
+    end
+    add_defines(defines)
+option_end()
+add_options("use_std_harden")
+
 includes("*/xmake.lua")
