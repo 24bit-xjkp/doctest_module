@@ -4,36 +4,46 @@ task("test_package", function ()
         import("core.project.config")
         config.load()
 
-        local support_type = { "local", "remote" }
-        local package_type = option.get("type") or support_type
+        local verbose = option.get("verbose")
         local prefix = "${color.build.progress}[test_package]${clear} "
-        for _, type in ipairs(package_type) do
-            assert(table.contains(support_type, type), [[The package type "%s" is unsupported.]], type)
+
+        ---@param args string[]
+        ---@return string[]
+        local function generate_args(args)
+            if verbose then
+                table.insert(args, "-v")
+            end
+            return args
         end
 
-        for _, type in ipairs(package_type) do
-            local work_dir = path.join(os.scriptdir(), "..", "test", type .. "_package")
-            cprint(prefix .. "Enter test directory: %s", work_dir)
-            local old_dir = os.cd(work_dir)
-            local args = { "config", "-P", ".", "-y", "-c" }
-            for _, opt_name in ipairs({ "toolchain", "runtimes", "kind", "mode" }) do
-                ---@type string | nil
-                local opt = config.get(opt_name)
-                if opt then
-                    table.insert(args, format("--%s=%s", opt_name, opt))
-                end
-            end
+        ---@param args string[]
+        ---@return void
+        local function run_command(args)
             cprint(prefix .. "xmake " .. table.concat(args, " "))
             os.execv("xmake", args)
-            cprint(prefix .. "xmake test -P .")
-            os.exec("xmake test -P .")
-            os.cd(old_dir)
         end
+
+        local work_dir = path.join(os.scriptdir(), "..", "test", "package")
+        cprint(prefix .. "Enter test directory: %s", work_dir)
+        local old_dir = os.cd(work_dir)
+        local args = generate_args { "config", "-P", ".", "-y", "-c" }
+        for _, opt_name in ipairs({ "toolchain", "runtimes", "kind", "mode", "use_std_harden" }) do
+            ---@type string | nil
+            local opt = config.get(opt_name)
+            if opt then
+                table.insert(args, format("--%s=%s", opt_name, opt))
+            end
+        end
+        run_command(args)
+
+        args = generate_args { "test", "-P", "." }
+        run_command(args)
+        os.cd(old_dir)
     end)
 
     set_menu {
         usage = "xmake test_package [options]",
         description = "Test the description of package in the doctest_module project.",
-        options = { { nil, "type", "vs", nil, "The package type (local, remote)." } }
+        options = {}
     }
 end)
