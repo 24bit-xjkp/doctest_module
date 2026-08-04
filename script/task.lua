@@ -5,6 +5,7 @@ task("test_package", function ()
         config.load()
 
         local verbose = option.get("verbose")
+        local use_remote_package = option.get("remote")
         local prefix = "${color.build.progress}[test_package]${clear} "
 
         ---@param args string[]
@@ -26,7 +27,9 @@ task("test_package", function ()
         local work_dir = path.join(os.scriptdir(), "..", "test", "package")
         cprint(prefix .. "Enter test directory: %s", work_dir)
         local old_dir = os.cd(work_dir)
-        local args = generate_args { "config", "-P", ".", "-y", "-c" }
+        local args = generate_args {
+            "config", "-P", ".", "-y", "-c", "--use_local_package=" .. (use_remote_package and "no" or "yes")
+        }
         for _, opt_name in ipairs({ "toolchain", "runtimes", "kind", "mode", "use_std_harden" }) do
             ---@type string | nil
             local opt = config.get(opt_name)
@@ -44,6 +47,8 @@ task("test_package", function ()
     set_menu {
         usage = "xmake test_package [options]",
         description = "Test the description of package in the doctest_module project.",
-        options = {}
+        options = {
+            { "r", "remote", "k", nil, "Use remote source of doctest_module" }
+        }
     }
 end)

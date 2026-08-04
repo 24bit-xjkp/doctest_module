@@ -9,9 +9,16 @@ set_policy("package.install_locally", true)
 includes("../../script/package.lua", "../../script/option.lua")
 add_options("use_std_harden")
 
+option("use_local_package")
+    set_default(true)
+    set_description("Use local source of doctest_module instead of remote one.")
+option_end()
+
 package("my_doctest_module")
     set_base("doctest_module")
-    set_sourcedir(path.join(os.scriptdir(), "..", ".."))
+    if get_config("use_local_package") then
+        set_sourcedir(path.join(os.scriptdir(), "..", ".."))
+    end
     set_policy("package.install_always", true)
 package_end()
 
