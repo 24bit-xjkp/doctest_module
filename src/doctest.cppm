@@ -7,7 +7,7 @@ import std.compat;
 
 export namespace doctest::detail
 {
-    namespace types = ::std; // NOLINT(misc-unused-alias-decls)
+    namespace types = ::std;  // NOLINT(misc-unused-alias-decls)
 }
 
 extern "C++"
@@ -48,6 +48,7 @@ export namespace doctest
     using ::doctest::ContextOptions;
     using ::doctest::CurrentTestCaseStats;
     using ::doctest::failureString;
+    using ::doctest::IContextScope;
     using ::doctest::IReporter;
     using ::doctest::MessageData;
     using ::doctest::QueryData;
@@ -79,6 +80,8 @@ export namespace doctest
 
         using ::doctest::detail::acquireGeneratorValue;
         using ::doctest::detail::binary_assert;
+        using ::doctest::detail::ContextScope;
+        using ::doctest::detail::ContextScopeBase;
         using ::doctest::detail::decomp_assert;
         using ::doctest::detail::ExpressionDecomposer;
         using ::doctest::detail::MakeContextScope;
