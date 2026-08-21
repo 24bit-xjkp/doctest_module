@@ -13,11 +13,13 @@ end)
 option("use_std_harden", function ()
     set_default(false)
     set_description("Enable c++ standard library harden.")
-    local defines
-    if is_mode("debug") then
-        defines = { "_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG", "_GLIBCXX_DEBUG" }
-    else
-        defines = { "_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST", "_GLIBCXX_ASSERTIONS" }
-    end
-    add_defines(defines)
+    add_defines(
+        "_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_" .. (is_mode("debug") and "DEBUG" or "FAST"),
+        "_GLIBCXX_ASSERTIONS"
+    )
+end)
+
+option("with_main", function ()
+    set_default(true)
+    set_description("Enable main function support.")
 end)
